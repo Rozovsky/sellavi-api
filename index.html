@@ -1,63 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<body>
+  </head>
+  <body>
 
-<!-- 1) Define html tag to put orders in  -->
+    <!-- 1) Define html tag to put orders in -->
 
-    <ul id="ordersList">
-    </ul>
+    <ul id="ordersList"></ul>
 
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script > 
+    <script>
 
+      // 2) Choose html tag to put orders in
 
-// 2) Choose html tag to put orders in
-   const refs = {
-    ordersList:document.querySelector('#ordersList')
-}
+      const refs = {
+        ordersList: document.querySelector("#ordersList"),
+      };
 
-// 3) receive orders array from the backend
+      // 3) receive orders array from the backend
 
-async function getOrders() {
-    const headers = {
-        "Authorization": 'Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkNBNUQ1NDRFQzI1Njg4OEEzRjdDMjFGMTYwMDdDMDI3RkQ4QUFERUUiLCJ0eXAiOiJhdCtqd3QiLCJ4NXQiOiJ5bDFVVHNKV2lJb19mQ0h4WUFmQUpfMktyZTQifQ.eyJuYmYiOjE2MTg0MjMzNDksImV4cCI6MTYxOTAyODE0OSwiaXNzIjoiaHR0cHM6Ly9hdXRoLmVwaWNlbnRyay51YSIsImF1ZCI6InBvcnRhbC1hcGkiLCJjbGllbnRfaWQiOiJwb3J0YWwtYW5ndWxhci1wcm9kLWNsaWVudCIsInN1YiI6IjU2OTViZmEwLTA4MzktNDdkYS05YThkLTJkYWZmNDZiY2RmMyIsImF1dGhfdGltZSI6MTYxODQyMzM0OSwiaWRwIjoibG9jYWwiLCJpZCI6IjQ3MDAwMDA0MjAwIiwiZW1haWwiOiJ2LmJhaWtvdkBlcGljZW50cmsudWEiLCJqdGkiOiJiSDVZYlhCQzdrMUVaVkgzVlM4aU5nIiwic2NvcGUiOlsib3BlbmlkIiwicHJvZmlsZSIsImVtYWlsIiwicm9sZSIsImlkIiwicG9ydGFsLWFwaSJdLCJhbXIiOlsicHdkIl19.CiToIzmdcNYPmL2P_gR8_XQCClJ8Ohm99QRgVVGBthzhJFWMCs5juhJD4KgZuzVkbskh0sH6p1c3v22JFt7RC4ius8DFhqPJyrH_dpvhwEDs4HTiIGe5vMmQUN_gqGJgekq6_GHyLVL_VukdRTj9kAujU5U0Ew3kKzDrfkD6IEN00jSDmTdM7fTUa9DDgHPb76OmxWatFmsuXIDEBRD9yKpy2ZmEh7y6UU3USTzWLcJo_7Prqn9Pp_ZSJkJGUPRDVn5e0EK3SpIbJkAJVqNxvgAuXOHZ3ou7RRox4MQGq9u8RgVvLFEg6I3drk2L5hYIQRSrzq4Pug5TxTgxMVmNgg',
-        "accept": ' application/json'
-    }
+      async function getOrders() {
+        const headers = {
+          "x-token": "3ebe6c-23d340-398bbc-97e590-a2d1f2",
+          accept: " application/json",
+        };
 
-    try {
-        await axios.get('https://portal-api-test.epicentrk.ua/api/booking/vehicles/drivers',
-            {headers: headers}).then(
- //  4) put array of orders in choosen tag 
-            data => refs.ordersList.insertAdjacentHTML('beforeend', createList(data))
-)
-        
-    } catch (err) {
-        console.log(err)
-    }
-}
-// 5) iteration function of an array  with orders to return 
-function createList(data) {
-    console.log(data)
-    let res = data.data.reduce((acc, order) => {
-        return acc +
-      `<li class=order-item>
+        try {
+          await axios
+            .get("https://ru.sellavi.com/gateway/orders/1/0", {
+              headers: headers,
+            })
+            .then(
+              //  4) put array of orders in choosen tag
+              (response) =>
+                refs.ordersList.insertAdjacentHTML(
+                  "beforeend",
+                  createList(response)
+                )
+            );
+        } catch (err) {
+          console.log(err);
+        }
+      }
+      // 5) iteration function of an array  with orders to return html with orders
+      function createList(data) {
+        let res = data.reduce((acc, order) => {
+          return (
+            acc +
+            `<li class=order-item>
             <p>Time of order : ${order.time}</p>
             <p>Amount ${order.amount} RUB</p>
             <p>Status of order is (${order.status})</p>
-       </li>`;
-    }, '');
-    console.log(res)
-    return res;
-}
+       </li>`
+          );
+        }, "");
+        return res;
+      }
+      // 6) call the function
 
-getOrders()
- 
+      getOrders();
     </script>
-</body>
+  </body>
 </html>
